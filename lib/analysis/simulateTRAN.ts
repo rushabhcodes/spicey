@@ -162,7 +162,7 @@ function simulateTRAN(ckt: ParsedCircuit) {
       if (iter === 19) break
     }
 
-    xPrev = x // Save for next timestep
+    xPrev = [...x] // Save copy for next timestep
 
     for (let id = 1; id < ckt.nodes.count(); id++) {
       const idx = id - 1
