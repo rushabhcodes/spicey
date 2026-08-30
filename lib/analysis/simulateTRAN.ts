@@ -144,9 +144,10 @@ function simulateTRAN(ckt: ParsedCircuit) {
   const elementCurrents: Record<string, number[]> = {}
 
   let t = 0
+  let xPrev = new Array(Nvar).fill(0) // Store previous solution for better initial guess
   for (let step = 0; step <= steps; step++, t = step * dt) {
     times.push(t)
-    let x = new Array(Nvar).fill(0)
+    let x = step === 0 ? new Array(Nvar).fill(0) : [...xPrev] // Use previous solution as initial guess
 
     for (let iter = 0; iter < 20; iter++) {
       const A = Array.from({ length: Nvar }, () => new Array(Nvar).fill(0))
@@ -160,6 +161,8 @@ function simulateTRAN(ckt: ParsedCircuit) {
       if (!switched) break
       if (iter === 19) break
     }
+
+    xPrev = [...x] // Save copy for next timestep
 
     for (let id = 1; id < ckt.nodes.count(); id++) {
       const idx = id - 1
